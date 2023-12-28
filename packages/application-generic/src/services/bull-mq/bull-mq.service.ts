@@ -14,8 +14,7 @@ import {
 } from 'bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { IEventJobData, IJobData, JobTopicNameEnum } from '@novu/shared';
-
-import { WorkflowInMemoryProviderService } from '../in-memory-provider';
+import { CommunicationInMemoryProviderService } from '../in-memory-provider/services';
 
 interface IQueueMetrics {
   completed: Metrics;
@@ -43,14 +42,14 @@ export {
 export class BullMqService {
   private _queue: Queue;
   private _worker: Worker;
-  private workflowInMemoryProviderService: WorkflowInMemoryProviderService;
+  private workflowInMemoryProviderService: CommunicationInMemoryProviderService;
 
   public static readonly pro: boolean =
     process.env.NOVU_MANAGED_SERVICE !== undefined;
 
   constructor() {
     this.workflowInMemoryProviderService =
-      new WorkflowInMemoryProviderService();
+      new CommunicationInMemoryProviderService();
   }
 
   public async initialize(): Promise<void> {
@@ -109,7 +108,7 @@ export class BullMqService {
    *
    */
   private generatePrefix(prefix: JobTopicNameEnum): string {
-    if (this.workflowInMemoryProviderService.providerInUseIsInClusterMode()) {
+    if (this.workflowInMemoryProviderService.runningInCluster()) {
       return `{${prefix}}`;
     }
 
