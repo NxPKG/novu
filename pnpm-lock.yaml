@@ -2942,8 +2942,8 @@ importers:
         specifier: ^1.6.2
         version: 1.6.2
       bullmq:
-        specifier: ^3.10.2
-        version: 3.10.4
+        specifier: ^5.1.8
+        version: 5.1.8
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -3006,8 +3006,8 @@ importers:
         version: 7.8.1
     optionalDependencies:
       '@taskforcesh/bullmq-pro':
-        specifier: 5.1.14
-        version: 5.1.14
+        specifier: 6.9.6
+        version: 6.9.6
     devDependencies:
       '@istanbuljs/nyc-config-typescript':
         specifier: ^1.0.1
@@ -27499,11 +27499,11 @@ packages:
       use-sync-external-store: 1.2.0(react@17.0.2)
     dev: false
 
-  /@taskforcesh/bullmq-pro@5.1.14:
-    resolution: {integrity: sha512-J/83Q1GTFWbUWn1bpsiX+CcQXktp7ADg/d1oID+wQ8ZwSB2W5l/1FV4yR1BEi3sO+UFEo+rK3qfXQuDml7aBYA==, tarball: '@taskforcesh/bullmq-pro/-/@taskforcesh/bullmq-pro-5.1.14.tgz'}
+  /@taskforcesh/bullmq-pro@6.9.6:
+    resolution: {integrity: sha512-Ay2pmA4g1ghcJMKWMTGVRKmoFmy5ZU2erhFKgTvijBgzBcxG/pyd8kmswceRbeXqCGayOr+rWi8RnqaNMKMvNA==, tarball: https://npm.taskforce.sh/@taskforcesh/bullmq-pro/-/@taskforcesh/bullmq-pro-6.9.6.tgz}
     requiresBuild: true
     dependencies:
-      bullmq: 3.6.6
+      bullmq: 4.17.0
       lodash: 4.17.21
       msgpackr: 1.8.5
       rxjs: 6.6.7
@@ -32357,21 +32357,39 @@ packages:
       - supports-color
     dev: false
 
-  /bullmq@3.6.6:
-    resolution: {integrity: sha512-W71jXrcTdcT3Y5tzMyTx22Cd8O3dTML7vl6KG3YdGVGrO3+UmKRLYfGLn1QwIhIoTQJVvIrSB4qfGs1hgqYRVw==}
+  /bullmq@4.17.0:
+    resolution: {integrity: sha512-URnHgB01rlCP8RTpmW3kFnvv3vdd2aI1OcBMYQwnqODxGiJUlz9MibDVXE83mq7ee1eS1IvD9lMQqGszX6E5Pw==}
+    requiresBuild: true
     dependencies:
       cron-parser: 4.8.1
       glob: 8.1.0
       ioredis: 5.3.2
       lodash: 4.17.21
       msgpackr: 1.8.5
+      node-abort-controller: 3.1.1
       semver: 7.5.4
       tslib: 2.6.2
-      uuid: 9.0.0
+      uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
     dev: false
     optional: true
+
+  /bullmq@5.1.8:
+    resolution: {integrity: sha512-jZQOzjr35qGIYRjRoO56zf0Lm9aMQVlkzgBLeaoXuK86K+KvXyXoO+ErlAlaAKNQW5IGr9P1/oZzR1NvIy9tuA==}
+    dependencies:
+      cron-parser: 4.8.1
+      glob: 8.1.0
+      ioredis: 5.3.2
+      lodash: 4.17.21
+      msgpackr: 1.10.1
+      node-abort-controller: 3.1.1
+      semver: 7.5.4
+      tslib: 2.6.2
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /busboy@1.6.0:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
@@ -44731,6 +44749,12 @@ packages:
     dev: false
     optional: true
 
+  /msgpackr@1.10.1:
+    resolution: {integrity: sha512-r5VRLv9qouXuLiIBrLpl2d5ZvPt8svdQTl5/vMvE4nzDMyEX4sgW5yWhuBBj5UmgwOTWj8CIdSXn5sAfsHAWIQ==}
+    optionalDependencies:
+      msgpackr-extract: 3.0.2
+    dev: false
+
   /msgpackr@1.8.5:
     resolution: {integrity: sha512-mpPs3qqTug6ahbblkThoUY2DQdNXcm4IapwOS3Vm/87vmpzLVelvp9h3It1y9l1VPpiFLV11vfOXnmeEwiIXwg==}
     optionalDependencies:
@@ -45125,7 +45149,6 @@ packages:
 
   /node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
-    dev: true
 
   /node-addon-api@3.2.1:
     resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
