@@ -93,6 +93,12 @@ export class MailjetEmailProvider implements IEmailProvider {
         Filename: attachment.name,
         Base64Content: attachment.file.toString('base64'),
       })),
+      InlinedAttachments: options.inlineAttachments?.map((attachment) => ({
+        ContentType: attachment.mime,
+        Filename: attachment.name,
+        Base64Content: attachment.file.toString('base64'),
+        ContentID: attachment.name,
+      })),
     };
 
     if (options.replyTo) {

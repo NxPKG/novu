@@ -23,6 +23,27 @@ export class ResendEmailProvider implements IEmailProvider {
     this.resendClient = new Resend(this.config.apiKey);
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): { content?: string | Buffer; filename?: string | false | undefined }[] {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      filename: attachment.name,
+      content: attachment.file,
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      filename: attachment.name,
+      content: attachment.file,
+      contentId: attachment.name,
+      disposition: 'inline',
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   async sendMessage(
     options: IEmailOptions
   ): Promise<ISendMessageSuccessResponse> {
@@ -37,10 +58,10 @@ export class ResendEmailProvider implements IEmailProvider {
       html: options.html,
       cc: options.cc,
       reply_to: options.replyTo || null,
-      attachments: options.attachments?.map((attachment) => ({
-        filename: attachment?.name,
-        content: attachment.file,
-      })),
+      attachments: this.getAttachments(
+        options.attachments,
+        options.inlineAttachments
+      ),
       bcc: options.bcc,
     });
 

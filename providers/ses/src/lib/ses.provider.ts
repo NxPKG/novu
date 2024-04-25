@@ -10,7 +10,7 @@ import {
 } from '@novu/stateless';
 import { SESClient, SendRawEmailCommand } from '@aws-sdk/client-ses';
 import { SESConfig } from './ses.config';
-import nodemailer from 'nodemailer';
+import nodemailer, { SendMailOptions } from 'nodemailer';
 
 export class SESEmailProvider implements IEmailProvider {
   id = 'ses';
@@ -25,6 +25,29 @@ export class SESEmailProvider implements IEmailProvider {
         secretAccessKey: this.config.secretAccessKey,
       },
     });
+  }
+
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): SendMailOptions['attachments'] | null {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      filename: attachment?.name,
+      content: attachment.file,
+      contentType: attachment.mime,
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      filename: attachment?.name,
+      content: attachment.file,
+      contentType: attachment.mime,
+      cid: attachment.name,
+      contentDisposition: 'inline',
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
   }
 
   private async sendMail({

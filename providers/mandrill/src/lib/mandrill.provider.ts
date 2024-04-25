@@ -10,7 +10,7 @@ import {
 } from '@novu/stateless';
 
 import mailchimp from '@mailchimp/mailchimp_transactional';
-import { IMandrilInterface } from './mandril.interface';
+import { IMandrilInterface, IMandrillAttachment } from './mandril.interface';
 
 export enum MandrillStatusEnum {
   OPENED = 'open',
@@ -41,6 +41,27 @@ export class MandrillProvider implements IEmailProvider {
     this.transporter = mailchimp(this.config.apiKey);
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): IMandrillAttachment[] {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      content: attachment.file.toString('base64'),
+      type: attachment.mime,
+      name: attachment?.name,
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      content: attachment.file.toString('base64'),
+      type: attachment.mime,
+      name: attachment?.name,
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   async sendMessage(
     emailOptions: IEmailOptions
   ): Promise<ISendMessageSuccessResponse> {
@@ -51,11 +72,10 @@ export class MandrillProvider implements IEmailProvider {
         subject: emailOptions.subject,
         html: emailOptions.html,
         to: this.mapTo(emailOptions),
-        attachments: emailOptions.attachments?.map((attachment) => ({
-          content: attachment.file.toString('base64'),
-          type: attachment.mime,
-          name: attachment?.name,
-        })),
+        attachments: this.getAttachments(
+          emailOptions.attachments,
+          emailOptions.inlineAttachments
+        ),
       },
     };
 

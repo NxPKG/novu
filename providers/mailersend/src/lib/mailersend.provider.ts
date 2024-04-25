@@ -31,17 +31,35 @@ export class MailersendEmailProvider implements IEmailProvider {
   }
 
   private getAttachments(
-    attachments: IEmailOptions['attachments']
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
   ): Attachment[] | null {
-    return attachments?.map(
+    const mappedAttachments = attachments?.map(
       (attachment) =>
         new Attachment(attachment.file.toString('base64'), attachment.name)
     );
+    const mappedInlineAttachments = inlineAttachments?.map(
+      (attachment) =>
+        new Attachment(
+          attachment.file.toString('base64'),
+          attachment.name,
+          'inline',
+          attachment.name
+        )
+    );
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
   }
 
   private createMailData(options: IEmailOptions): EmailParams {
     const recipients = this.createRecipients(options.to);
-    const attachments = this.getAttachments(options.attachments);
+    const attachments = this.getAttachments(
+      options.attachments,
+      options.inlineAttachments
+    );
 
     const emailParams = new EmailParams()
       .setFrom(options.from ?? this.config.from)

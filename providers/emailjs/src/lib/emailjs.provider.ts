@@ -53,17 +53,24 @@ export class EmailJsProvider implements IEmailProvider {
   }
 
   private mapAttachments(emailOptions: IEmailOptions) {
-    const attachmentsModel: MessageAttachment[] = emailOptions.attachments
-      ? emailOptions.attachments.map((attachment) => {
-          return {
-            name: attachment.name,
-            data: attachment.file.toString('base64'),
-            type: attachment.mime,
-          };
-        })
-      : [];
-
-    attachmentsModel?.push({ data: emailOptions.html, alternative: true });
+    const attachmentsModel: MessageAttachment[] = [
+      { data: emailOptions.html, alternative: true },
+    ];
+    emailOptions.attachments?.forEach((attachment) => {
+      attachmentsModel.push({
+        name: attachment.name,
+        data: attachment.file.toString('base64'),
+        type: attachment.mime,
+      });
+    });
+    emailOptions.inlineAttachments?.forEach((attachment) => {
+      attachmentsModel.push({
+        name: attachment.name,
+        data: attachment.file.toString('base64'),
+        type: attachment.mime,
+        inline: true,
+      });
+    });
 
     return attachmentsModel;
   }

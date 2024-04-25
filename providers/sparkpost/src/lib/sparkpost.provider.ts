@@ -41,6 +41,7 @@ export class SparkPostEmailProvider implements IEmailProvider {
     text,
     html,
     attachments,
+    inlineAttachments,
   }: IEmailOptions): Promise<ISendMessageSuccessResponse> {
     const recipients: { address: string }[] = to.map((recipient) => {
       return { address: recipient };
@@ -49,6 +50,14 @@ export class SparkPostEmailProvider implements IEmailProvider {
     const files: Array<{ name: string; type: string; data: string }> = [];
 
     attachments?.forEach((attachment) => {
+      files.push({
+        name: attachment.name || randomUUID(),
+        type: attachment.mime,
+        data: attachment.file.toString('base64'),
+      });
+    });
+
+    inlineAttachments?.forEach((attachment) => {
       files.push({
         name: attachment.name || randomUUID(),
         type: attachment.mime,

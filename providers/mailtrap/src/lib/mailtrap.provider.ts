@@ -6,7 +6,7 @@ import {
   ICheckIntegrationResponse,
   CheckIntegrationResponseEnum,
 } from '@novu/stateless';
-import { MailtrapClient, Address } from 'mailtrap';
+import { MailtrapClient, Address, Attachment } from 'mailtrap';
 
 export class MailtrapEmailProvider implements IEmailProvider {
   id = 'mailtrap';
@@ -55,6 +55,28 @@ export class MailtrapEmailProvider implements IEmailProvider {
     };
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): Attachment[] | null {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      filename: attachment.name,
+      content: attachment.file,
+      type: attachment.mime,
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      filename: attachment.name,
+      content: attachment.file,
+      type: attachment.mime,
+      content_id: attachment.name,
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   private sendWithMailtrap(options: IEmailOptions) {
     return this.mailtrapClient.send({
       to: options.to.map(this.mapAddress),
@@ -64,11 +86,10 @@ export class MailtrapEmailProvider implements IEmailProvider {
       html: options.html,
       bcc: options.bcc?.map(this.mapAddress),
       cc: options.cc?.map(this.mapAddress),
-      attachments: options.attachments?.map((attachment) => ({
-        filename: attachment.name,
-        content: attachment.file,
-        type: attachment.mime,
-      })),
+      attachments: this.getAttachments(
+        options.attachments,
+        options.inlineAttachments
+      ),
     });
   }
 

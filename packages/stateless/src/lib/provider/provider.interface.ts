@@ -16,6 +16,7 @@ export interface IEmailOptions {
   from?: string;
   text?: string;
   attachments?: IAttachmentOptions[];
+  inlineAttachments?: IAttachmentOptions[];
   id?: string;
   replyTo?: string;
   cc?: string[];
