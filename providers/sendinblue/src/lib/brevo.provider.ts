@@ -29,6 +29,27 @@ export class BrevoEmailProvider implements IEmailProvider {
     });
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): any[] {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      name: attachment?.name,
+      content: attachment?.file.toString('base64'),
+      contentType: attachment.mime,
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      name: attachment?.name,
+      content: attachment?.file.toString('base64'),
+      contentType: attachment.mime,
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   async sendMessage(
     options: IEmailOptions
   ): Promise<ISendMessageSuccessResponse> {
@@ -43,10 +64,10 @@ export class BrevoEmailProvider implements IEmailProvider {
     email.subject = options.subject;
     email.htmlContent = options.html;
     email.textContent = options.text;
-    email.attachment = options.attachments?.map((attachment) => ({
-      name: attachment?.name,
-      content: attachment?.file.toString('base64'),
-    }));
+    email.attachment = this.getAttachments(
+      options.attachments,
+      options.inlineAttachments
+    );
 
     if (options.cc?.length) {
       email.cc = options.cc?.map((ccItem) => ({ email: ccItem }));

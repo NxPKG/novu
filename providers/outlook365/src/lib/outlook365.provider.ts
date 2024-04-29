@@ -68,6 +68,29 @@ export class Outlook365Provider implements IEmailProvider {
     }
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): SendMailOptions['attachments'] | null {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      filename: attachment?.name,
+      content: attachment.file,
+      contentType: attachment.mime,
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      filename: attachment?.name,
+      content: attachment.file,
+      contentType: attachment.mime,
+      cid: attachment.name,
+      contentDisposition: 'inline',
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   private createMailData(options: IEmailOptions): SendMailOptions {
     const sendMailOptions: SendMailOptions = {
       from: {
@@ -78,11 +101,10 @@ export class Outlook365Provider implements IEmailProvider {
       subject: options.subject,
       html: options.html,
       text: options.text,
-      attachments: options.attachments?.map((attachment) => ({
-        filename: attachment?.name,
-        content: attachment.file,
-        contentType: attachment.mime,
-      })),
+      attachments: this.getAttachments(
+        options.attachments,
+        options.inlineAttachments
+      ),
     };
 
     if (options.replyTo) {

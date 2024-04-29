@@ -67,6 +67,30 @@ export class SendgridEmailProvider implements IEmailProvider {
     }
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): MailDataRequired['attachments'] | null {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      content: attachment.file.toString('base64'),
+      filename: attachment.name,
+      type: attachment.mime,
+      disposition: 'attachment',
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      content: attachment.file.toString('base64'),
+      filename: attachment.name,
+      type: attachment.mime,
+      disposition: 'inline',
+      content_id: attachment.name,
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   private createMailData(options: IEmailOptions) {
     const dynamicTemplateData = options.customData?.dynamicTemplateData;
     const templateId = options.customData?.templateId as unknown as string;

@@ -65,6 +65,34 @@ export class PostmarkEmailProvider implements IEmailProvider {
     }
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): Models.Attachment[] | null {
+    const mappedAttachments = attachments?.map(
+      (attachment) =>
+        new Models.Attachment(
+          attachment.name,
+          attachment.file.toString('base64'),
+          attachment.mime
+        )
+    );
+    const mappedInlineAttachments = inlineAttachments?.map(
+      (attachment) =>
+        new Models.Attachment(
+          attachment.name,
+          attachment.file.toString('base64'),
+          attachment.mime,
+          attachment.name
+        )
+    );
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   private createMailData(options: IEmailOptions): Message {
     const mailData: Message = {
       From: options.from || this.config.from,
@@ -74,13 +102,9 @@ export class PostmarkEmailProvider implements IEmailProvider {
       Subject: options.subject,
       Cc: getFormattedTo(options.cc),
       Bcc: getFormattedTo(options.bcc),
-      Attachments: options.attachments?.map(
-        (attachment) =>
-          new Models.Attachment(
-            attachment.name,
-            attachment.file.toString('base64'),
-            attachment.mime
-          )
+      Attachments: this.getAttachments(
+        options.attachments,
+        options.inlineAttachments
       ),
     };
 

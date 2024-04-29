@@ -122,6 +122,29 @@ export class NodemailerProvider implements IEmailProvider {
     }
   }
 
+  private getAttachments(
+    attachments: IEmailOptions['attachments'],
+    inlineAttachments: IEmailOptions['inlineAttachments']
+  ): SendMailOptions['attachments'] | null {
+    const mappedAttachments = attachments?.map((attachment) => ({
+      filename: attachment?.name,
+      content: attachment.file,
+      contentType: attachment.mime,
+    }));
+    const mappedInlineAttachments = inlineAttachments?.map((attachment) => ({
+      filename: attachment?.name,
+      content: attachment.file,
+      contentType: attachment.mime,
+      cid: attachment.name,
+      contentDisposition: 'inline',
+    }));
+    if (mappedAttachments && mappedInlineAttachments) {
+      return [...mappedAttachments, ...mappedInlineAttachments];
+    }
+
+    return mappedAttachments || mappedInlineAttachments;
+  }
+
   private createMailData(options: IEmailOptions): SendMailOptions {
     const sendMailOptions: SendMailOptions = {
       from: {
@@ -133,11 +156,10 @@ export class NodemailerProvider implements IEmailProvider {
       html: options.html,
       text: options.text,
       cc: options.cc,
-      attachments: options.attachments?.map((attachment) => ({
-        filename: attachment?.name,
-        content: attachment.file,
-        contentType: attachment.mime,
-      })),
+      attachments: this.getAttachments(
+        options.attachments,
+        options.inlineAttachments
+      ),
       bcc: options.bcc,
     };
 

@@ -52,6 +52,12 @@ export class MailgunEmailProvider implements IEmailProvider {
           filename: attachment.name,
         };
       }),
+      inline: emailOptions.inlineAttachments?.map((attachment) => {
+        return {
+          data: attachment.file,
+          filename: attachment.name,
+        };
+      }),
     };
 
     if (emailOptions.replyTo) {
