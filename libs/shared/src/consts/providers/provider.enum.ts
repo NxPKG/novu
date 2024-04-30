@@ -44,6 +44,7 @@ export enum CredentialsKeyEnum {
   imageUrl = 'imageUrl',
   state = 'state',
   externalLink = 'externalLink',
+  Topic = 'topic',
   channelId = 'channelId',
 }
 
@@ -120,6 +121,7 @@ export enum PushProviderIdEnum {
   FCM = 'fcm',
   APNS = 'apns',
   EXPO = 'expo',
+  Ntfy = 'ntfy',
   OneSignal = 'one-signal',
   Pushpad = 'pushpad',
   PushWebhook = 'push-webhook',

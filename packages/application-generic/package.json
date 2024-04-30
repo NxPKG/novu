@@ -88,6 +88,7 @@
     "@novu/ms-teams": "^0.24.1",
     "@novu/netcore": "^0.24.1",
     "@novu/nexmo": "^0.24.1",
+    "@novu/ntfy": "^0.24.1",
     "@novu/nodemailer": "^0.24.1",
     "@novu/one-signal": "^0.24.1",
     "@novu/outlook365": "^0.24.1",
