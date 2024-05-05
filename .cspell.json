@@ -639,7 +639,9 @@
     "websockets",
     "whatsapp",
     "whatsappbusiness",
-    "parens"
+    "parens",
+    "novui",
+    "tsup"
   ],
   "flagWords": [],
   "patterns": [

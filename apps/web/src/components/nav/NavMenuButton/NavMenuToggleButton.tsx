@@ -1,7 +1,8 @@
 import { IconArrowDropUp, IconArrowDropDown } from '@novu/design-system';
 import { FC, PropsWithChildren, useState } from 'react';
-import { css } from '../../../styled-system/css';
-import { Flex, HStack } from '../../../styled-system/jsx';
+import { Test } from '@novu/novui';
+import { css } from '@novu/novui/styled-system/css';
+import { Flex, HStack } from '@novu/novui/styled-system/jsx';
 import { INavMenuButtonProps, rawButtonBaseStyles } from './NavMenuButton.shared';
 
 type INavMenuToggleButtonProps = Omit<INavMenuButtonProps, 'rightSide'>;
@@ -25,6 +26,7 @@ export const NavMenuToggleButton: FC<PropsWithChildren<INavMenuToggleButtonProps
           <HStack gap="75">
             {icon}
             <span>{label}</span>
+            <Test />
           </HStack>
           {isOpen ? <IconArrowDropUp /> : <IconArrowDropDown />}
         </HStack>
