@@ -6,9 +6,9 @@ import {
   ApiRateLimitCategoryEnum,
   ApiRateLimitCostEnum,
   IJwtPayload,
+  ResourceEnum,
   TriggerRequestCategoryEnum,
 } from '@novu/shared';
-import { SendTestEmail, SendTestEmailCommand } from '@novu/application-generic';
 
 import {
   BulkTriggerEventDto,
@@ -28,8 +28,11 @@ import { UserAuthGuard } from '../auth/framework/user.auth.guard';
 import { ApiCommonResponses, ApiResponse, ApiOkResponse } from '../shared/framework/response.decorator';
 import { DataBooleanDto } from '../shared/dtos/data-wrapper-dto';
 import { ThrottlerCategory, ThrottlerCost } from '../rate-limiting/guards';
+import { SendTestEmail, SendTestEmailCommand } from './usecases/send-test-email';
+import { ResourceCategory } from '../resource-limiting/guards';
 
 @ThrottlerCategory(ApiRateLimitCategoryEnum.TRIGGER)
+@ResourceCategory(ResourceEnum.EVENTS)
 @ApiCommonResponses()
 @Controller({
   path: 'events',
@@ -154,6 +157,10 @@ export class EventsController {
         userId: user._id,
         environmentId: user.environmentId,
         organizationId: user.organizationId,
+        workflowId: body.workflowId,
+        stepId: body.stepId,
+        chimera: body.chimera,
+        inputs: body.inputs,
       })
     );
   }
